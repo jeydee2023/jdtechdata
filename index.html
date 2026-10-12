@@ -35,6 +35,34 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Paystack Inline JS SDK -->
     <script src="https://js.paystack.co/v1/inline.js"></script>
+
+    <!-- Firebase App, Analytics & Firestore Modular SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-analytics.js";
+        import { getFirestore, collection, getDocs, setDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDVJidac5-VhNs8022_iDb72Mmbop1BTPY",
+            authDomain: "jdtechdata.firebaseapp.com",
+            projectId: "jdtechdata",
+            storageBucket: "jdtechdata.firebasestorage.app",
+            messagingSenderId: "302648334350",
+            appId: "1:302648334350:web:6c9197f96747da4104045f",
+            measurementId: "G-51FXGHZ44C"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
+        // Expose to global window scope for the app
+        window.db = db;
+        window.firebaseMethods = { collection, getDocs, setDoc, doc, deleteDoc };
+        
+        // Signal that Firebase is initialized
+        window.dispatchEvent(new Event('firebase-ready'));
+    </script>
     
     <style>
         body {
@@ -52,7 +80,6 @@
             background-image: radial-gradient(rgba(255, 204, 0, 0.08) 1px, transparent 1px);
             background-size: 24px 24px;
         }
-        /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -73,7 +100,6 @@
     <!-- HEADER / NAVBAR -->
     <header class="sticky top-0 z-40 backdrop-blur-md bg-[#0d0e12]/80 border-b border-gray-800/80">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <!-- Brand Logo -->
             <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
                 <div class="w-11 h-11 bg-mtn-yellow rounded-xl flex items-center justify-center font-black text-black text-xl shadow-lg shadow-mtn-yellow/20 transform hover:rotate-3 transition-transform">
                     JD
@@ -86,7 +112,6 @@
                 </div>
             </div>
 
-            <!-- Quick Nav & Admin Trigger -->
             <div class="flex items-center space-x-3 sm:space-x-4">
                 <a href="#bundles" class="hidden md:flex items-center space-x-1 text-sm font-semibold text-gray-300 hover:text-mtn-yellow transition-colors px-3 py-2">
                     <i data-lucide="wifi" class="w-4 h-4"></i>
@@ -107,13 +132,11 @@
     <!-- HERO SECTION -->
     <section class="relative pt-10 pb-12 sm:pt-16 sm:pb-20 overflow-hidden">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <!-- Badge -->
             <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-mtn-yellow/10 border border-mtn-yellow/30 text-mtn-yellow text-xs font-bold mb-6 animate-pulse">
                 <i data-lucide="zap" class="w-3.5 h-3.5"></i>
                 <span>Automated & Instant MTN Delivery 24/7</span>
             </div>
 
-            <!-- Main Heading -->
             <h2 class="text-4xl sm:text-6xl font-black text-white tracking-tight mb-4 max-w-4xl mx-auto leading-tight">
                 Buy MTN Data For Less. <br class="hidden sm:block"/>
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-mtn-yellow via-yellow-200 to-amber-500">Save Big On Every Gig!</span>
@@ -123,7 +146,6 @@
                 Get cheap non-expiry MTN internet bundles sent straight to your phone. Fast checkout via Paystack or direct WhatsApp assistance!
             </p>
 
-            <!-- Feature Pills -->
             <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm font-semibold text-gray-300">
                 <div class="flex items-center space-x-2 bg-mtn-card/80 px-4 py-2 rounded-lg border border-gray-800">
                     <i data-lucide="check-circle" class="w-4 h-4 text-mtn-yellow"></i>
@@ -158,7 +180,7 @@
             </div>
         </div>
 
-        <!-- Bundles Grid (Dynamically rendered) -->
+        <!-- Bundles Grid -->
         <div id="bundles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Dynamic bundle cards loaded here -->
         </div>
@@ -179,7 +201,6 @@
                 <p class="text-xs text-gray-400 mt-1">The data bundle will be delivered directly to this line.</p>
             </div>
 
-            <!-- Modal Selected Summary -->
             <div class="bg-gray-900/90 rounded-xl p-4 border border-gray-800 mb-5 flex items-center justify-between">
                 <div>
                     <span id="modal-bundle-name" class="text-lg font-black text-mtn-yellow block">10 GB</span>
@@ -191,7 +212,6 @@
                 </div>
             </div>
 
-            <!-- Phone Number Input -->
             <div class="space-y-4 mb-6">
                 <div>
                     <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">
@@ -206,7 +226,6 @@
                 </div>
             </div>
 
-            <!-- Checkout Choice Buttons -->
             <div class="space-y-3">
                 <button onclick="processCheckout('paystack')" class="w-full bg-mtn-yellow hover:bg-mtn-gold text-black font-extrabold py-3.5 px-4 rounded-xl shadow-lg shadow-mtn-yellow/10 flex items-center justify-center space-x-2 transition-all active:scale-[0.98]">
                     <i data-lucide="credit-card" class="w-5 h-5"></i>
@@ -264,7 +283,6 @@
                     </div>
                 </div>
 
-                <!-- Scrollable Table -->
                 <div class="overflow-y-auto flex-grow my-4 pr-1">
                     <table class="w-full text-left text-xs sm:text-sm">
                         <thead class="text-xs text-gray-400 uppercase bg-gray-900/80 sticky top-0 border-b border-gray-800">
@@ -283,7 +301,6 @@
                     </table>
                 </div>
 
-                <!-- Add New Bundle Bar -->
                 <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 mt-auto">
                     <h4 class="text-xs font-bold text-gray-300 uppercase tracking-wider mb-3">Add Custom Bundle</h4>
                     <form onsubmit="handleAddBundle(event)" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
@@ -355,25 +372,6 @@
         </div>
     </footer>
 
-    <!-- FIREBASE INITIALIZATION SCRIPT -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-analytics.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDVJidac5-VhNs8022_iDb72Mmbop1BTPY",
-            authDomain: "jdtechdata.firebaseapp.com",
-            projectId: "jdtechdata",
-            storageBucket: "jdtechdata.firebasestorage.app",
-            messagingSenderId: "302648334350",
-            appId: "1:302648334350:web:6c9197f96747da4104045f",
-            measurementId: "G-51FXGHZ44C"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-    </script>
-
     <script>
         // DEFAULT INITIAL BUNDLES DATA
         const DEFAULT_BUNDLES = [
@@ -393,31 +391,72 @@
         let selectedBundle = null;
         let isAdminLoggedIn = false;
 
-        // Initialize App
-        window.addEventListener('DOMContentLoaded', () => {
+        // Initialize App once Firebase connects
+        window.addEventListener('firebase-ready', () => {
             loadBundles();
-            renderBundles();
+        });
+
+        // Fallback initialization if firebase-ready event misses
+        window.addEventListener('DOMContentLoaded', () => {
             lucide.createIcons();
             document.getElementById('year').textContent = new Date().getFullYear();
         });
 
-        // LOAD BUNDLES FROM LOCAL STORAGE
-        function loadBundles() {
-            const stored = localStorage.getItem('jdtech_bundles');
-            if (stored) {
-                try {
-                    bundles = JSON.parse(stored);
-                } catch(e) {
+        // LOAD BUNDLES FROM FIREBASE CLOUD DATABASE
+        async function loadBundles() {
+            try {
+                const { collection, getDocs } = window.firebaseMethods;
+                const querySnapshot = await getDocs(collection(window.db, "bundles"));
+                
+                bundles = [];
+                querySnapshot.forEach((document) => {
+                    bundles.push({ id: document.id, ...document.data() });
+                });
+
+                // If cloud database is empty, seed it with default bundles
+                if (bundles.length === 0) {
                     bundles = [...DEFAULT_BUNDLES];
+                    for (let b of bundles) {
+                        await saveBundleToCloud(b);
+                    }
                 }
-            } else {
+                
+                renderBundles();
+            } catch (err) {
+                console.error("Error loading from Firebase:", err);
+                showToast("Failed to load cloud data. Using defaults.", "error");
                 bundles = [...DEFAULT_BUNDLES];
-                saveBundles();
+                renderBundles();
             }
         }
 
-        function saveBundles() {
-            localStorage.setItem('jdtech_bundles', JSON.stringify(bundles));
+        // SAVE BUNDLE TO FIREBASE CLOUD
+        async function saveBundleToCloud(bundle) {
+            try {
+                const { doc, setDoc } = window.firebaseMethods;
+                await setDoc(doc(window.db, "bundles", bundle.id), {
+                    size: bundle.size,
+                    official: bundle.official,
+                    price: bundle.price,
+                    cost: bundle.cost
+                });
+                showToast("Synced across the internet!", "success");
+            } catch (err) {
+                console.error("Error saving to Firebase:", err);
+                showToast("Failed to save change online", "error");
+            }
+        }
+
+        // DELETE BUNDLE FROM FIREBASE CLOUD
+        async function deleteBundleFromCloud(id) {
+            try {
+                const { doc, deleteDoc } = window.firebaseMethods;
+                await deleteDoc(doc(window.db, "bundles", id));
+                showToast("Bundle removed from cloud", "info");
+            } catch (err) {
+                console.error("Error deleting from Firebase:", err);
+                showToast("Failed to delete online", "error");
+            }
         }
 
         // RENDER STOREFRONT BUNDLES
@@ -434,7 +473,6 @@
                     <div class="absolute -right-12 -top-12 w-28 h-28 bg-mtn-yellow/5 rounded-full blur-2xl group-hover:bg-mtn-yellow/15 transition-all"></div>
                     
                     <div>
-                        <!-- Top Bar: Badge & Discount -->
                         <div class="flex items-center justify-between mb-4">
                             <span class="bg-mtn-yellow/10 border border-mtn-yellow/30 text-mtn-yellow font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider">
                                 Non-Expiry
@@ -446,7 +484,6 @@
                             ` : ''}
                         </div>
 
-                        <!-- Data Volume -->
                         <div class="mb-4">
                             <h4 class="text-4xl font-black text-white tracking-tight group-hover:text-mtn-yellow transition-colors">
                                 ${bundle.size}
@@ -454,10 +491,9 @@
                             <p class="text-xs text-gray-400 mt-1 font-medium">High Speed MTN Internet Data</p>
                         </div>
 
-                        <!-- Pricing Display -->
                         <div class="bg-black/50 rounded-xl p-4 border border-gray-800/80 mb-6 space-y-1">
                             <div class="flex items-center justify-between text-xs text-gray-400">
-                                <span>OLD MTN Price:</span>
+                                <span>Official MTN Price:</span>
                                 <span class="line-through decoration-red-500/80 font-bold text-gray-400">GHS ${bundle.official}</span>
                             </div>
                             <div class="flex items-center justify-between text-base">
@@ -467,7 +503,6 @@
                         </div>
                     </div>
 
-                    <!-- Action Buttons -->
                     <div class="grid grid-cols-2 gap-2.5 pt-2">
                         <button onclick="openOrderModal('${bundle.id}', 'whatsapp')" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 transition-all active:scale-95 border border-gray-700">
                             <i data-lucide="message-square" class="w-4 h-4 text-green-400"></i>
@@ -526,7 +561,6 @@
         function processCheckout(method) {
             const phoneInput = document.getElementById('recipient-phone').value.trim();
             
-            // Validate Phone Number
             if (!phoneInput || phoneInput.length < 10) {
                 showToast("Please enter a valid 10-digit MTN phone number", "error");
                 document.getElementById('recipient-phone').focus();
@@ -553,7 +587,7 @@
             const handler = PaystackPop.setup({
                 key: PAYSTACK_PUBLIC_KEY,
                 email: `customer_${phone}@jdtechdata.com`,
-                amount: Math.round(selectedBundle.price * 100), // Convert GHS to pesewas
+                amount: Math.round(selectedBundle.price * 100),
                 currency: "GHS",
                 ref: 'JDTECH_' + Math.floor((Math.random() * 1000000000) + 1),
                 metadata: {
@@ -675,18 +709,19 @@
             lucide.createIcons();
         }
 
-        function updateBundleField(index, field, value) {
+        async function updateBundleField(index, field, value) {
             const numVal = parseFloat(value);
             if (isNaN(numVal)) return;
             
             bundles[index][field] = numVal;
-            saveBundles();
             renderBundles();
             renderAdminTable();
-            showToast("Pricing updated live!", "success");
+            
+            // Push update to Firebase Cloud
+            await saveBundleToCloud(bundles[index]);
         }
 
-        function handleAddBundle(e) {
+        async function handleAddBundle(e) {
             e.preventDefault();
             const size = document.getElementById('new-size').value.trim();
             const official = parseFloat(document.getElementById('new-official').value);
@@ -707,34 +742,38 @@
             };
 
             bundles.push(newBundle);
-            saveBundles();
             renderBundles();
             renderAdminTable();
 
-            // Reset form
             document.getElementById('new-size').value = '';
             document.getElementById('new-official').value = '';
             document.getElementById('new-price').value = '';
             document.getElementById('new-cost').value = '';
 
-            showToast(`Added ${size} bundle successfully!`, "success");
+            // Save new bundle to Firebase Cloud
+            await saveBundleToCloud(newBundle);
         }
 
-        function deleteBundle(index) {
+        async function deleteBundle(index) {
             if (confirm(`Are you sure you want to delete the ${bundles[index].size} bundle?`)) {
+                const bundleId = bundles[index].id;
                 const name = bundles[index].size;
                 bundles.splice(index, 1);
-                saveBundles();
                 renderBundles();
                 renderAdminTable();
+                
+                // Remove from Firebase Cloud
+                await deleteBundleFromCloud(bundleId);
                 showToast(`Deleted ${name} bundle`, "info");
             }
         }
 
-        function resetPricesToDefault() {
+        async function resetPricesToDefault() {
             if (confirm("Reset all prices and bundles to default settings?")) {
                 bundles = [...DEFAULT_BUNDLES];
-                saveBundles();
+                for (let b of bundles) {
+                    await saveBundleToCloud(b);
+                }
                 renderBundles();
                 renderAdminTable();
                 showToast("Restored original pricing defaults!", "success");
@@ -781,5 +820,3 @@
     </script>
 </body>
 </html>
-
-```
