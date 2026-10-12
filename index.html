@@ -288,7 +288,7 @@
                         <thead class="text-xs text-gray-400 uppercase bg-gray-900/80 sticky top-0 border-b border-gray-800">
                             <tr>
                                 <th class="p-3">Bundle</th>
-                                <th class="p-3">Old MTN (GHS)</th>
+                                <th class="p-3">Official MTN (GHS)</th>
                                 <th class="p-3">Your Selling Price (GHS)</th>
                                 <th class="p-3">Cost Price (GHS)</th>
                                 <th class="p-3 text-right">Profit / Sale</th>
@@ -305,7 +305,7 @@
                     <h4 class="text-xs font-bold text-gray-300 uppercase tracking-wider mb-3">Add Custom Bundle</h4>
                     <form onsubmit="handleAddBundle(event)" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
                         <input type="text" id="new-size" placeholder="Size (e.g. 12 GB)" required class="bg-black/60 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:border-mtn-yellow outline-none">
-                        <input type="number" step="0.1" id="new-official" placeholder="Old Price (GHS)" required class="bg-black/60 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:border-mtn-yellow outline-none">
+                        <input type="number" step="0.1" id="new-official" placeholder="Official (GHS)" required class="bg-black/60 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:border-mtn-yellow outline-none">
                         <input type="number" step="0.1" id="new-price" placeholder="Your Price (GHS)" required class="bg-black/60 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:border-mtn-yellow outline-none">
                         <input type="number" step="0.1" id="new-cost" placeholder="Cost Price (GHS)" required class="bg-black/60 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:border-mtn-yellow outline-none">
                         <button type="submit" class="col-span-2 sm:col-span-1 bg-mtn-yellow hover:bg-mtn-gold text-black font-extrabold text-xs rounded-lg p-2.5 transition-all">
@@ -493,7 +493,7 @@
 
                         <div class="bg-black/50 rounded-xl p-4 border border-gray-800/80 mb-6 space-y-1">
                             <div class="flex items-center justify-between text-xs text-gray-400">
-                                <span>Old MTN Price:</span>
+                                <span>Official MTN Price:</span>
                                 <span class="line-through decoration-red-500/80 font-bold text-gray-400">GHS ${bundle.official}</span>
                             </div>
                             <div class="flex items-center justify-between text-base">
@@ -540,3 +540,283 @@
             const modal = document.getElementById('order-modal');
             const content = document.getElementById('order-modal-content');
             modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeOrderModal() {
+            const modal = document.getElementById('order-modal');
+            const content = document.getElementById('order-modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // CHECKOUT PROCESSOR
+        function processCheckout(method) {
+            const phoneInput = document.getElementById('recipient-phone').value.trim();
+            
+            if (!phoneInput || phoneInput.length < 10) {
+                showToast("Please enter a valid 10-digit MTN phone number", "error");
+                document.getElementById('recipient-phone').focus();
+                return;
+            }
+
+            closeOrderModal();
+
+            if (method === 'whatsapp') {
+                const message = `Hello JDTECH Data Bundles, I want to purchase the *${selectedBundle.size}* bundle for *GHS ${selectedBundle.price}* to recipient phone number: *${phoneInput}*.`;
+                const encodedMsg = encodeURIComponent(message);
+                const whatsappUrl = `https://wa.me/233556675828?text=${encodedMsg}`;
+                window.open(whatsappUrl, '_blank');
+                showToast("Opening WhatsApp with your order...", "info");
+            } else if (method === 'paystack') {
+                payWithPaystack(phoneInput);
+            }
+        }
+
+        // PAYSTACK INTEGRATION
+        function payWithPaystack(phone) {
+            showToast("Initializing secure Paystack gateway...", "info");
+
+            const handler = PaystackPop.setup({
+                key: PAYSTACK_PUBLIC_KEY,
+                email: `customer_${phone}@jdtechdata.com`,
+                amount: Math.round(selectedBundle.price * 100),
+                currency: "GHS",
+                ref: 'JDTECH_' + Math.floor((Math.random() * 1000000000) + 1),
+                metadata: {
+                    custom_fields: [
+                        {
+                            display_name: "Recipient Phone Number",
+                            variable_name: "recipient_phone",
+                            value: phone
+                        },
+                        {
+                            display_name: "Bundle Package",
+                            variable_name: "bundle_size",
+                            value: selectedBundle.size
+                        }
+                    ]
+                },
+                callback: function(response) {
+                    showSuccessModal(response.reference, phone, selectedBundle.size, selectedBundle.price);
+                },
+                onClose: function() {
+                    showToast("Transaction cancelled", "warning");
+                }
+            });
+
+            handler.openIframe();
+        }
+
+        function showSuccessModal(ref, phone, size, price) {
+            document.getElementById('receipt-ref').textContent = ref;
+            document.getElementById('receipt-phone').textContent = phone;
+            document.getElementById('receipt-size').textContent = size;
+            document.getElementById('receipt-amount').textContent = `GHS ${price}`;
+
+            document.getElementById('success-modal').classList.remove('hidden');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('success-modal').classList.add('hidden');
+        }
+
+        // ADMIN FUNCTIONALITY
+        function openAdminModal() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+            if (isAdminLoggedIn) {
+                showAdminDashboard();
+            } else {
+                document.getElementById('admin-login-view').classList.remove('hidden');
+                document.getElementById('admin-dashboard-view').classList.add('hidden');
+                document.getElementById('admin-pin-input').focus();
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pin = document.getElementById('admin-pin-input').value;
+            if (pin === ADMIN_PIN) {
+                isAdminLoggedIn = true;
+                showToast("Admin authenticated successfully", "success");
+                showAdminDashboard();
+            } else {
+                showToast("Incorrect Admin PIN!", "error");
+                document.getElementById('admin-pin-input').value = '';
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            document.getElementById('admin-pin-input').value = '';
+            document.getElementById('admin-login-view').classList.remove('hidden');
+            document.getElementById('admin-dashboard-view').classList.add('hidden');
+            showToast("Logged out of Admin", "info");
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('admin-login-view').classList.add('hidden');
+            document.getElementById('admin-dashboard-view').classList.remove('hidden');
+            document.getElementById('admin-dashboard-view').classList.add('flex');
+            renderAdminTable();
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('admin-bundles-tbody');
+            tbody.innerHTML = '';
+
+            bundles.forEach((bundle, index) => {
+                const profit = (bundle.price - bundle.cost).toFixed(2);
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-800/40 transition-colors";
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-white">${bundle.size}</td>
+                    <td class="p-3">
+                        <input type="number" step="0.1" value="${bundle.official}" onchange="updateBundleField(${index}, 'official', this.value)" 
+                               class="w-20 bg-black/50 border border-gray-700 text-white rounded px-2 py-1 text-xs focus:border-mtn-yellow outline-none">
+                    </td>
+                    <td class="p-3">
+                        <input type="number" step="0.1" value="${bundle.price}" onchange="updateBundleField(${index}, 'price', this.value)" 
+                               class="w-20 bg-black/50 border border-gray-700 text-mtn-yellow font-bold rounded px-2 py-1 text-xs focus:border-mtn-yellow outline-none">
+                    </td>
+                    <td class="p-3">
+                        <input type="number" step="0.1" value="${bundle.cost}" onchange="updateBundleField(${index}, 'cost', this.value)" 
+                               class="w-20 bg-black/50 border border-gray-700 text-gray-300 rounded px-2 py-1 text-xs focus:border-mtn-yellow outline-none">
+                    </td>
+                    <td class="p-3 text-right font-bold ${profit >= 0 ? 'text-green-400' : 'text-red-400'}">
+                        GHS ${profit}
+                    </td>
+                    <td class="p-3 text-center">
+                        <button onclick="deleteBundle(${index})" class="text-red-400 hover:text-red-300 p-1 rounded hover:bg-red-950/40">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            lucide.createIcons();
+        }
+
+        async function updateBundleField(index, field, value) {
+            const numVal = parseFloat(value);
+            if (isNaN(numVal)) return;
+            
+            bundles[index][field] = numVal;
+            renderBundles();
+            renderAdminTable();
+            
+            // Push update to Firebase Cloud
+            await saveBundleToCloud(bundles[index]);
+        }
+
+        async function handleAddBundle(e) {
+            e.preventDefault();
+            const size = document.getElementById('new-size').value.trim();
+            const official = parseFloat(document.getElementById('new-official').value);
+            const price = parseFloat(document.getElementById('new-price').value);
+            const cost = parseFloat(document.getElementById('new-cost').value);
+
+            if (!size || isNaN(official) || isNaN(price) || isNaN(cost)) {
+                showToast("Please fill all bundle fields properly", "error");
+                return;
+            }
+
+            const newBundle = {
+                id: 'b_' + Date.now(),
+                size,
+                official,
+                price,
+                cost
+            };
+
+            bundles.push(newBundle);
+            renderBundles();
+            renderAdminTable();
+
+            document.getElementById('new-size').value = '';
+            document.getElementById('new-official').value = '';
+            document.getElementById('new-price').value = '';
+            document.getElementById('new-cost').value = '';
+
+            // Save new bundle to Firebase Cloud
+            await saveBundleToCloud(newBundle);
+        }
+
+        async function deleteBundle(index) {
+            if (confirm(`Are you sure you want to delete the ${bundles[index].size} bundle?`)) {
+                const bundleId = bundles[index].id;
+                const name = bundles[index].size;
+                bundles.splice(index, 1);
+                renderBundles();
+                renderAdminTable();
+                
+                // Remove from Firebase Cloud
+                await deleteBundleFromCloud(bundleId);
+                showToast(`Deleted ${name} bundle`, "info");
+            }
+        }
+
+        async function resetPricesToDefault() {
+            if (confirm("Reset all prices and bundles to default settings?")) {
+                bundles = [...DEFAULT_BUNDLES];
+                for (let b of bundles) {
+                    await saveBundleToCloud(b);
+                }
+                renderBundles();
+                renderAdminTable();
+                showToast("Restored original pricing defaults!", "success");
+            }
+        }
+
+        // TOAST SYSTEM
+        function showToast(message, type = "info") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = "bg-gray-900 border-gray-700 text-white";
+            let icon = "info";
+
+            if (type === "success") {
+                bgClass = "bg-green-950 border-green-700 text-green-200";
+                icon = "check-circle";
+            } else if (type === "error") {
+                bgClass = "bg-red-950 border-red-700 text-red-200";
+                icon = "alert-circle";
+            } else if (type === "warning") {
+                bgClass = "bg-amber-950 border-amber-700 text-amber-200";
+                icon = "alert-triangle";
+            }
+
+            toast.className = `pointer-events-auto flex items-center space-x-2 border px-4 py-3 rounded-xl shadow-xl text-xs font-semibold transform transition-all duration-300 translate-y-5 opacity-0 ${bgClass}`;
+            toast.innerHTML = `
+                <i data-lucide="${icon}" class="w-4 h-4"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-5', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
