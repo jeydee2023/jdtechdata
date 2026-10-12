@@ -355,6 +355,25 @@
         </div>
     </footer>
 
+    <!-- FIREBASE INITIALIZATION SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-analytics.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDVJidac5-VhNs8022_iDb72Mmbop1BTPY",
+            authDomain: "jdtechdata.firebaseapp.com",
+            projectId: "jdtechdata",
+            storageBucket: "jdtechdata.firebasestorage.app",
+            messagingSenderId: "302648334350",
+            appId: "1:302648334350:web:6c9197f96747da4104045f",
+            measurementId: "G-51FXGHZ44C"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+
     <script>
         // DEFAULT INITIAL BUNDLES DATA
         const DEFAULT_BUNDLES = [
@@ -438,7 +457,7 @@
                         <!-- Pricing Display -->
                         <div class="bg-black/50 rounded-xl p-4 border border-gray-800/80 mb-6 space-y-1">
                             <div class="flex items-center justify-between text-xs text-gray-400">
-                                <span>Official MTN Price:</span>
+                                <span>OLD MTN Price:</span>
                                 <span class="line-through decoration-red-500/80 font-bold text-gray-400">GHS ${bundle.official}</span>
                             </div>
                             <div class="flex items-center justify-between text-base">
@@ -762,3 +781,5 @@
     </script>
 </body>
 </html>
+
+```
