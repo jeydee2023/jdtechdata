@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JDTECH Data Bundles - Fast & Affordable MTN Data</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        mtn: {
+                            yellow: '#FFCC00',
+                            gold: '#E6B800',
+                            dark: '#121212',
+                            card: '#1E1E24',
+                            accent: '#2A2A35'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Font Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Paystack Inline JS SDK -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d0e12;
+            color: #f3f4f6;
+        }
+        .glow-yellow {
+            box-shadow: 0 0 25px -5px rgba(255, 204, 0, 0.25);
+        }
+        .glow-yellow-sm {
+            box-shadow: 0 0 10px rgba(255, 204, 0, 0.15);
+        }
+        .bg-grid-pattern {
+            background-image: radial-gradient(rgba(255, 204, 0, 0.08) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a2a35;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffcc00;
+        }
+    </style>
+</head>
+<body class="bg-grid-pattern min-h-screen flex flex-col justify-between selection:bg-mtn-yellow selection:text-black">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-[#0d0e12]/80 border-b border-gray-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <div class="w-11 h-11 bg-mtn-yellow rounded-xl flex items-center justify-center font-black text-black text-xl shadow-lg shadow-mtn-yellow/20 transform hover:rotate-3 transition-transform">
+                    JD
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-black tracking-tight text-white flex items-center gap-1.5">
+                        JDTECH <span class="text-mtn-yellow">DATA</span>
+                    </h1>
+                    <p class="text-xs text-gray-400 font-medium">Instant MTN Bundles & Top-ups</p>
+                </div>
+            </div>
+
+            <!-- Quick Nav & Admin Trigger -->
+            <div class="flex items-center space-x-3 sm:space-x-4">
+                <a href="#bundles" class="hidden md:flex items-center space-x-1 text-sm font-semibold text-gray-300 hover:text-mtn-yellow transition-colors px-3 py-2">
+                    <i data-lucide="wifi" class="w-4 h-4"></i>
+                    <span>Bundles</span>
+                </a>
+                <a href="https://wa.me/233556675828" target="_blank" class="hidden sm:flex items-center space-x-1.5 text-xs font-bold text-green-400 bg-green-950/50 border border-green-800/60 hover:bg-green-900/60 transition-all px-3 py-2 rounded-lg">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    <span>0556675828</span>
+                </a>
+                <button onclick="openAdminModal()" class="flex items-center space-x-1.5 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs sm:text-sm font-semibold px-3 sm:px-4 py-2.5 rounded-xl border border-gray-700 transition-all shadow-sm active:scale-95">
+                    <i data-lucide="shield-lock" class="w-4 h-4 text-mtn-yellow"></i>
+                    <span>Admin</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative pt-10 pb-12 sm:pt-16 sm:pb-20 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-mtn-yellow/10 border border-mtn-yellow/30 text-mtn-yellow text-xs font-bold mb-6 animate-pulse">
+                <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                <span>Automated & Instant MTN Delivery 24/7</span>
+            </div>
+
+            <!-- Main Heading -->
+            <h2 class="text-4xl sm:text-6xl font-black text-white tracking-tight mb-4 max-w-4xl mx-auto leading-tight">
+                Buy MTN Data For Less. <br class="hidden sm:block"/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-mtn-yellow via-yellow-200 to-amber-500">Save Big On Every Gig!</span>
+            </h2>
+
+            <p class="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto mb-8 font-normal leading-relaxed">
+                Get cheap non-expiry MTN internet bundles sent straight to your phone. Fast checkout via Paystack or direct WhatsApp assistance!
+            </p>
+
+            <!-- Feature Pills -->
+            <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm font-semibold text-gray-300">
+                <div class="flex items-center space-x-2 bg-mtn-card/80 px-4 py-2 rounded-lg border border-gray-800">
+                    <i data-lucide="check-circle" class="w-4 h-4 text-mtn-yellow"></i>
+                    <span>No Expiry Data</span>
+                </div>
+                <div class="flex items-center space-x-2 bg-mtn-card/80 px-4 py-2 rounded-lg border border-gray-800">
+                    <i data-lucide="clock" class="w-4 h-4 text-mtn-yellow"></i>
+                    <span>1-5 Mins Delivery</span>
+                </div>
+                <div class="flex items-center space-x-2 bg-mtn-card/80 px-4 py-2 rounded-lg border border-gray-800">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-mtn-yellow"></i>
+                    <span>100% Safe Payments</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BUNDLES STOREFRONT SECTION -->
+    <main id="bundles" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 flex-grow">
+        <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-8 pb-4 border-b border-gray-800 gap-4">
+            <div>
+                <h3 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
+                    <i data-lucide="package" class="w-7 h-7 text-mtn-yellow"></i>
+                    Select Your MTN Data Package
+                </h3>
+                <p class="text-gray-400 text-sm mt-1">Choose a bundle below to order instantly.</p>
+            </div>
+            
+            <div class="bg-gray-900 border border-gray-800 rounded-xl p-1.5 flex items-center text-xs font-semibold text-gray-400">
+                <span class="px-3 py-1.5 bg-mtn-yellow text-black font-bold rounded-lg shadow">MTN Ghana</span>
+                <span class="px-3 py-1.5 text-gray-400">Non-Expiry</span>
+            </div>
+        </div>
+
+        <!-- Bundles Grid (Dynamically rendered) -->
+        <div id="bundles-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic bundle cards loaded here -->
+        </div>
+    </main>
+
+    <!-- ORDER PREPARATION / RECIPIENT PHONE MODAL -->
+    <div id="order-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+        <div class="bg-mtn-card border border-gray-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative transform transition-all scale-95 opacity-0" id="order-modal-content">
+            <button onclick="closeOrderModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2 rounded-xl hover:bg-gray-800 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 bg-mtn-yellow/20 text-mtn-yellow rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i data-lucide="smartphone" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Enter MTN Recipient Number</h3>
+                <p class="text-xs text-gray-400 mt-1">The data bundle will be delivered directly to this line.</p>
+            </div>
+
+            <!-- Modal Selected Summary -->
+            <div class="bg-gray-900/90 rounded-xl p-4 border border-gray-800 mb-5 flex items-center justify-between">
+                <div>
+                    <span id="modal-bundle-name" class="text-lg font-black text-mtn-yellow block">10 GB</span>
+                    <span class="text-xs text-gray-400">MTN Non-Expiry Bundle</span>
+                </div>
+                <div class="text-right">
+                    <span id="modal-bundle-price" class="text-xl font-extrabold text-white block">GHS 45</span>
+                    <span id="modal-bundle-savings" class="text-[10px] text-green-400 font-bold bg-green-950/60 px-2 py-0.5 rounded">Save GHS 5</span>
+                </div>
+            </div>
+
+            <!-- Phone Number Input -->
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-2">
+                        MTN Mobile Number <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <input type="tel" id="recipient-phone" placeholder="e.g. 0556675828 or 024XXXXXXX" 
+                               class="w-full bg-black/60 border border-gray-700 rounded-xl px-4 py-3.5 text-white text-base font-medium placeholder-gray-500 focus:outline-none focus:border-mtn-yellow focus:ring-1 focus:ring-mtn-yellow transition-all">
+                        <i data-lucide="phone" class="w-5 h-5 text-gray-500 absolute right-3.5 top-3.5"></i>
+                    </div>
+                    <p class="text-[11px] text-gray-400 mt-1.5">Double check the phone number to prevent wrong top-ups.</p>
+                </div>
+            </div>
+
+            <!-- Checkout Choice Buttons -->
+            <div class="space-y-3">
+                <button onclick="processCheckout('paystack')" class="w-full bg-mtn-yellow hover:bg-mtn-gold text-black font-extrabold py-3.5 px-4 rounded-xl shadow-lg shadow-mtn-yellow/10 flex items-center justify-center space-x-2 transition-all active:scale-[0.98]">
+                    <i data-lucide="credit-card" class="w-5 h-5"></i>
+                    <span>Pay with Paystack (Instant)</span>
+                </button>
+                <button onclick="processCheckout('whatsapp')" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3.5 px-4 rounded-xl flex items-center justify-center space-x-2 transition-all active:scale-[0.98]">
+                    <i data-lucide="message-square" class="w-5 h-5"></i>
+                    <span>Order via WhatsApp Chat</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ADMIN AUTH & DASHBOARD MODAL -->
+    <div id="admin-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden">
+        <div class="bg-mtn-card border border-gray-800 rounded-2xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] flex flex-col">
+            <button onclick="closeAdminModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white p-2 rounded-xl hover:bg-gray-800 transition-colors">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- STEP 1: PASSWORD LOGIN -->
+            <div id="admin-login-view" class="py-8 max-w-md mx-auto w-full text-center">
+                <div class="w-14 h-14 bg-mtn-yellow/10 text-mtn-yellow rounded-2xl flex items-center justify-center mx-auto mb-4 border border-mtn-yellow/20">
+                    <i data-lucide="lock" class="w-7 h-7"></i>
+                </div>
+                <h3 class="text-2xl font-black text-white">Admin Dashboard Login</h3>
+                <p class="text-xs text-gray-400 mt-1 mb-6">Enter your security PIN to access pricing management.</p>
+
+                <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                    <div class="relative">
+                        <input type="password" id="admin-pin-input" maxlength="8" placeholder="Enter Admin PIN" 
+                               class="w-full bg-black/60 border border-gray-700 rounded-xl px-4 py-3.5 text-center text-xl font-mono tracking-widest text-mtn-yellow placeholder-gray-600 focus:outline-none focus:border-mtn-yellow transition-all">
+                    </div>
+                    <button type="submit" class="w-full bg-mtn-yellow text-black font-extrabold py-3.5 rounded-xl hover:bg-mtn-gold transition-all">
+                        Authenticate PIN
+                    </button>
+                </form>
+            </div>
+
+            <!-- STEP 2: ADMIN PANEL (LOGGED IN) -->
+            <div id="admin-dashboard-view" class="hidden flex-col h-full overflow-hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-gray-800 gap-3">
+                    <div>
+                        <span class="text-xs font-bold text-mtn-yellow uppercase tracking-widest">Control Panel</span>
+                        <h3 class="text-xl font-black text-white">Bundle Price & Profit Manager</h3>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="resetPricesToDefault()" class="text-xs bg-red-950/60 text-red-400 hover:bg-red-900/60 border border-red-800/80 font-bold px-3 py-2 rounded-xl transition-all flex items-center gap-1">
+                            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                            <span>Reset Defaults</span>
+                        </button>
+                        <button onclick="logoutAdmin()" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold px-3 py-2 rounded-xl transition-all">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Scrollable Table -->
+                <div class="overflow-y-auto flex-grow my-4 pr-1">
+                    <table class="w-full text-left text-xs sm:text-sm">
+                        <thead class="text-xs text-gray-400 uppercase bg-gray-900/80 sticky top-0 border-b border-gray-800">
+                            <tr>
+                                <th class="p-3">Bundle</th>
+                                <th class="p-3">Official MTN (GHS)</th>
+                                <th class="p-3">Your Selling Price (GHS)</th>
+                                <th class="p-3">Cost Price (GHS)</th>
+                                <th class="p-3 text-right">Profit / Sale</th>
+                                <th class="p-3 text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-bundles-tbody" class="divide-y divide-gray-800">
+                            <!-- Admin table rows rendered dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Add New Bundle Bar -->
+                <div class="bg-gray-900/90 p-4 rounded-xl border border-gray-800 mt-auto">
+                    <h4 class="text-xs font-bold text-gray-300 uppercase tracking-wider mb-3">Add Custom Bundle</h4>
+                    <form onsubmit="handleAddBundle(event)" class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+                        <input type="text" id="new-size" placeholder="Size (e.g. 12 GB)" required class="bg-black/60 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:border-mtn-yellow outline-none">
+                        <input type="number" step="0.1" id="new-official" placeholder="Official (GHS)" required class="bg-black/60 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:border-mtn-yellow outline-none">
+                        <input type="number" step="0.1" id="new-price" placeholder="Your Price (GHS)" required class="bg-black/60 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:border-mtn-yellow outline-none">
+                        <input type="number" step="0.1" id="new-cost" placeholder="Cost Price (GHS)" required class="bg-black/60 border border-gray-700 text-white text-xs rounded-lg p-2.5 focus:border-mtn-yellow outline-none">
+                        <button type="submit" class="col-span-2 sm:col-span-1 bg-mtn-yellow hover:bg-mtn-gold text-black font-extrabold text-xs rounded-lg p-2.5 transition-all">
+                            + Add Bundle
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS NOTIFICATION / RECEIPT MODAL -->
+    <div id="success-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+        <div class="bg-mtn-card border border-gray-800 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl">
+            <div class="w-16 h-16 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/30">
+                <i data-lucide="check" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-2xl font-black text-white mb-1">Payment Successful!</h3>
+            <p class="text-xs text-gray-400 mb-6">Your MTN Data Bundle order has been processed.</p>
+
+            <div class="bg-gray-900 rounded-xl p-4 text-left text-xs space-y-2 border border-gray-800 mb-6">
+                <div class="flex justify-between"><span class="text-gray-400">Reference:</span> <span id="receipt-ref" class="font-mono text-white">--</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Recipient:</span> <span id="receipt-phone" class="font-bold text-white">--</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Bundle:</span> <span id="receipt-size" class="font-bold text-mtn-yellow">--</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Amount Paid:</span> <span id="receipt-amount" class="font-bold text-white">--</span></div>
+            </div>
+
+            <button onclick="closeSuccessModal()" class="w-full bg-mtn-yellow text-black font-extrabold py-3 rounded-xl hover:bg-mtn-gold transition-all">
+                Done & Return
+            </button>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-gray-900 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="text-center md:text-left">
+                <div class="flex items-center justify-center md:justify-start space-x-2 mb-2">
+                    <div class="w-7 h-7 bg-mtn-yellow rounded-lg flex items-center justify-center font-black text-black text-xs">
+                        JD
+                    </div>
+                    <span class="font-black text-lg text-white">JDTECH Data Bundles</span>
+                </div>
+                <p class="text-xs text-gray-500">Fast, affordable, and reliable MTN internet data services in Ghana.</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center gap-4 text-xs text-gray-400">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="phone-call" class="w-4 h-4 text-mtn-yellow"></i>
+                    <span>Contact / WhatsApp: <strong class="text-white">0556675828</strong></span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-green-400"></i>
+                    <span>Paystack Live Secured</span>
+                </div>
+            </div>
+
+            <div class="text-center md:text-right text-xs text-gray-600">
+                &copy; <span id="year"></span> JDTECH Data Bundles. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DEFAULT INITIAL BUNDLES DATA
+        const DEFAULT_BUNDLES = [
+            { id: 'b1', size: '5 GB', official: 30, price: 25, cost: 20 },
+            { id: 'b2', size: '8 GB', official: 40, price: 35, cost: 32 },
+            { id: 'b3', size: '10 GB', official: 50, price: 45, cost: 40 },
+            { id: 'b4', size: '16 GB', official: 70, price: 65, cost: 64 },
+            { id: 'b5', size: '20 GB', official: 90, price: 85, cost: 80 }
+        ];
+
+        // CONFIG & STATE
+        const ADMIN_PIN = "3940";
+        const PAYSTACK_PUBLIC_KEY = "pk_live_d2488f6e90779beed64a0c776fc3d71aa422e6d4";
+        const WHATSAPP_NUMBER = "0556675828";
+        
+        let bundles = [];
+        let selectedBundle = null;
+        let isAdminLoggedIn = false;
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            loadBundles();
+            renderBundles();
+            lucide.createIcons();
+            document.getElementById('year').textContent = new Date().getFullYear();
+        });
+
+        // LOAD BUNDLES FROM LOCAL STORAGE
+        function loadBundles() {
+            const stored = localStorage.getItem('jdtech_bundles');
+            if (stored) {
+                try {
+                    bundles = JSON.parse(stored);
+                } catch(e) {
+                    bundles = [...DEFAULT_BUNDLES];
+                }
+            } else {
+                bundles = [...DEFAULT_BUNDLES];
+                saveBundles();
+            }
+        }
+
+        function saveBundles() {
+            localStorage.setItem('jdtech_bundles', JSON.stringify(bundles));
+        }
+
+        // RENDER STOREFRONT BUNDLES
+        function renderBundles() {
+            const container = document.getElementById('bundles-container');
+            container.innerHTML = '';
+
+            bundles.forEach(bundle => {
+                const savings = bundle.official - bundle.price;
+                const card = document.createElement('div');
+                card.className = "bg-mtn-card rounded-2xl border border-gray-800 p-6 flex flex-col justify-between hover:border-mtn-yellow/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-mtn-yellow/5 group relative overflow-hidden";
+                
+                card.innerHTML = `
+                    <div class="absolute -right-12 -top-12 w-28 h-28 bg-mtn-yellow/5 rounded-full blur-2xl group-hover:bg-mtn-yellow/15 transition-all"></div>
+                    
+                    <div>
+                        <!-- Top Bar: Badge & Discount -->
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-mtn-yellow/10 border border-mtn-yellow/30 text-mtn-yellow font-extrabold text-xs px-3 py-1 rounded-full uppercase tracking-wider">
+                                Non-Expiry
+                            </span>
+                            ${savings > 0 ? `
+                                <span class="bg-green-950/80 border border-green-800 text-green-400 font-bold text-xs px-2.5 py-1 rounded-md flex items-center gap-1">
+                                    <i data-lucide="trending-down" class="w-3.5 h-3.5"></i> Save GHS ${savings}
+                                </span>
+                            ` : ''}
+                        </div>
+
+                        <!-- Data Volume -->
+                        <div class="mb-4">
+                            <h4 class="text-4xl font-black text-white tracking-tight group-hover:text-mtn-yellow transition-colors">
+                                ${bundle.size}
+                            </h4>
+                            <p class="text-xs text-gray-400 mt-1 font-medium">High Speed MTN Internet Data</p>
+                        </div>
+
+                        <!-- Pricing Display -->
+                        <div class="bg-black/50 rounded-xl p-4 border border-gray-800/80 mb-6 space-y-1">
+                            <div class="flex items-center justify-between text-xs text-gray-400">
+                                <span>Official MTN Price:</span>
+                                <span class="line-through decoration-red-500/80 font-bold text-gray-400">GHS ${bundle.official}</span>
+                            </div>
+                            <div class="flex items-center justify-between text-base">
+                                <span class="text-xs font-bold text-gray-300">JDTECH Price:</span>
+                                <span class="text-2xl font-black text-mtn-yellow">GHS ${bundle.price}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="grid grid-cols-2 gap-2.5 pt-2">
+                        <button onclick="openOrderModal('${bundle.id}', 'whatsapp')" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-3 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 transition-all active:scale-95 border border-gray-700">
+                            <i data-lucide="message-square" class="w-4 h-4 text-green-400"></i>
+                            <span>WhatsApp</span>
+                        </button>
+                        <button onclick="openOrderModal('${bundle.id}', 'paystack')" class="w-full bg-mtn-yellow hover:bg-mtn-gold text-black font-extrabold py-3 px-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 transition-all shadow-md active:scale-95">
+                            <i data-lucide="zap" class="w-4 h-4 fill-black"></i>
+                            <span>Buy Now</span>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        // MODAL HANDLERS
+        function openOrderModal(bundleId, preferredMethod = 'paystack') {
+            selectedBundle = bundles.find(b => b.id === bundleId);
+            if (!selectedBundle) return;
+
+            document.getElementById('modal-bundle-name').textContent = selectedBundle.size;
+            document.getElementById('modal-bundle-price').textContent = `GHS ${selectedBundle.price}`;
+            
+            const savings = selectedBundle.official - selectedBundle.price;
+            const savingsElem = document.getElementById('modal-bundle-savings');
+            if (savings > 0) {
+                savingsElem.textContent = `Save GHS ${savings}`;
+                savingsElem.classList.remove('hidden');
+            } else {
+                savingsElem.classList.add('hidden');
+            }
+
+            const modal = document.getElementById('order-modal');
+            const content = document.getElementById('order-modal-content');
+            modal.classList.remove('hidden');
+            
+            setTimeout(() => {
+                content.classList.remove('scale-95', 'opacity-0');
+                content.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeOrderModal() {
+            const modal = document.getElementById('order-modal');
+            const content = document.getElementById('order-modal-content');
+            content.classList.remove('scale-100', 'opacity-100');
+            content.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // CHECKOUT PROCESSOR
+        function processCheckout(method) {
+            const phoneInput = document.getElementById('recipient-phone').value.trim();
+            
+            // Validate Phone Number
+            if (!phoneInput || phoneInput.length < 10) {
+                showToast("Please enter a valid 10-digit MTN phone number", "error");
+                document.getElementById('recipient-phone').focus();
+                return;
+            }
+
+            closeOrderModal();
+
+            if (method === 'whatsapp') {
+                const message = `Hello JDTECH Data Bundles, I want to purchase the *${selectedBundle.size}* bundle for *GHS ${selectedBundle.price}* to recipient phone number: *${phoneInput}*.`;
+                const encodedMsg = encodeURIComponent(message);
+                const whatsappUrl = `https://wa.me/233556675828?text=${encodedMsg}`;
+                window.open(whatsappUrl, '_blank');
+                showToast("Opening WhatsApp with your order...", "info");
+            } else if (method === 'paystack') {
+                payWithPaystack(phoneInput);
+            }
+        }
+
+        // PAYSTACK INTEGRATION
+        function payWithPaystack(phone) {
+            showToast("Initializing secure Paystack gateway...", "info");
+
+            const handler = PaystackPop.setup({
+                key: PAYSTACK_PUBLIC_KEY,
+                email: `customer_${phone}@jdtechdata.com`,
+                amount: Math.round(selectedBundle.price * 100), // Convert GHS to pesewas
+                currency: "GHS",
+                ref: 'JDTECH_' + Math.floor((Math.random() * 1000000000) + 1),
+                metadata: {
+                    custom_fields: [
+                        {
+                            display_name: "Recipient Phone Number",
+                            variable_name: "recipient_phone",
+                            value: phone
+                        },
+                        {
+                            display_name: "Bundle Package",
+                            variable_name: "bundle_size",
+                            value: selectedBundle.size
+                        }
+                    ]
+                },
+                callback: function(response) {
+                    showSuccessModal(response.reference, phone, selectedBundle.size, selectedBundle.price);
+                },
+                onClose: function() {
+                    showToast("Transaction cancelled", "warning");
+                }
+            });
+
+            handler.openIframe();
+        }
+
+        function showSuccessModal(ref, phone, size, price) {
+            document.getElementById('receipt-ref').textContent = ref;
+            document.getElementById('receipt-phone').textContent = phone;
+            document.getElementById('receipt-size').textContent = size;
+            document.getElementById('receipt-amount').textContent = `GHS ${price}`;
+
+            document.getElementById('success-modal').classList.remove('hidden');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('success-modal').classList.add('hidden');
+        }
+
+        // ADMIN FUNCTIONALITY
+        function openAdminModal() {
+            document.getElementById('admin-modal').classList.remove('hidden');
+            if (isAdminLoggedIn) {
+                showAdminDashboard();
+            } else {
+                document.getElementById('admin-login-view').classList.remove('hidden');
+                document.getElementById('admin-dashboard-view').classList.add('hidden');
+                document.getElementById('admin-pin-input').focus();
+            }
+        }
+
+        function closeAdminModal() {
+            document.getElementById('admin-modal').classList.add('hidden');
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const pin = document.getElementById('admin-pin-input').value;
+            if (pin === ADMIN_PIN) {
+                isAdminLoggedIn = true;
+                showToast("Admin authenticated successfully", "success");
+                showAdminDashboard();
+            } else {
+                showToast("Incorrect Admin PIN!", "error");
+                document.getElementById('admin-pin-input').value = '';
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            document.getElementById('admin-pin-input').value = '';
+            document.getElementById('admin-login-view').classList.remove('hidden');
+            document.getElementById('admin-dashboard-view').classList.add('hidden');
+            showToast("Logged out of Admin", "info");
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('admin-login-view').classList.add('hidden');
+            document.getElementById('admin-dashboard-view').classList.remove('hidden');
+            document.getElementById('admin-dashboard-view').classList.add('flex');
+            renderAdminTable();
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('admin-bundles-tbody');
+            tbody.innerHTML = '';
+
+            bundles.forEach((bundle, index) => {
+                const profit = (bundle.price - bundle.cost).toFixed(2);
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-800/40 transition-colors";
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-white">${bundle.size}</td>
+                    <td class="p-3">
+                        <input type="number" step="0.1" value="${bundle.official}" onchange="updateBundleField(${index}, 'official', this.value)" 
+                               class="w-20 bg-black/50 border border-gray-700 text-white rounded px-2 py-1 text-xs focus:border-mtn-yellow outline-none">
+                    </td>
+                    <td class="p-3">
+                        <input type="number" step="0.1" value="${bundle.price}" onchange="updateBundleField(${index}, 'price', this.value)" 
+                               class="w-20 bg-black/50 border border-gray-700 text-mtn-yellow font-bold rounded px-2 py-1 text-xs focus:border-mtn-yellow outline-none">
+                    </td>
+                    <td class="p-3">
+                        <input type="number" step="0.1" value="${bundle.cost}" onchange="updateBundleField(${index}, 'cost', this.value)" 
+                               class="w-20 bg-black/50 border border-gray-700 text-gray-300 rounded px-2 py-1 text-xs focus:border-mtn-yellow outline-none">
+                    </td>
+                    <td class="p-3 text-right font-bold ${profit >= 0 ? 'text-green-400' : 'text-red-400'}">
+                        GHS ${profit}
+                    </td>
+                    <td class="p-3 text-center">
+                        <button onclick="deleteBundle(${index})" class="text-red-400 hover:text-red-300 p-1 rounded hover:bg-red-950/40">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            lucide.createIcons();
+        }
+
+        function updateBundleField(index, field, value) {
+            const numVal = parseFloat(value);
+            if (isNaN(numVal)) return;
+            
+            bundles[index][field] = numVal;
+            saveBundles();
+            renderBundles();
+            renderAdminTable();
+            showToast("Pricing updated live!", "success");
+        }
+
+        function handleAddBundle(e) {
+            e.preventDefault();
+            const size = document.getElementById('new-size').value.trim();
+            const official = parseFloat(document.getElementById('new-official').value);
+            const price = parseFloat(document.getElementById('new-price').value);
+            const cost = parseFloat(document.getElementById('new-cost').value);
+
+            if (!size || isNaN(official) || isNaN(price) || isNaN(cost)) {
+                showToast("Please fill all bundle fields properly", "error");
+                return;
+            }
+
+            const newBundle = {
+                id: 'b_' + Date.now(),
+                size,
+                official,
+                price,
+                cost
+            };
+
+            bundles.push(newBundle);
+            saveBundles();
+            renderBundles();
+            renderAdminTable();
+
+            // Reset form
+            document.getElementById('new-size').value = '';
+            document.getElementById('new-official').value = '';
+            document.getElementById('new-price').value = '';
+            document.getElementById('new-cost').value = '';
+
+            showToast(`Added ${size} bundle successfully!`, "success");
+        }
+
+        function deleteBundle(index) {
+            if (confirm(`Are you sure you want to delete the ${bundles[index].size} bundle?`)) {
+                const name = bundles[index].size;
+                bundles.splice(index, 1);
+                saveBundles();
+                renderBundles();
+                renderAdminTable();
+                showToast(`Deleted ${name} bundle`, "info");
+            }
+        }
+
+        function resetPricesToDefault() {
+            if (confirm("Reset all prices and bundles to default settings?")) {
+                bundles = [...DEFAULT_BUNDLES];
+                saveBundles();
+                renderBundles();
+                renderAdminTable();
+                showToast("Restored original pricing defaults!", "success");
+            }
+        }
+
+        // TOAST SYSTEM
+        function showToast(message, type = "info") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = "bg-gray-900 border-gray-700 text-white";
+            let icon = "info";
+
+            if (type === "success") {
+                bgClass = "bg-green-950 border-green-700 text-green-200";
+                icon = "check-circle";
+            } else if (type === "error") {
+                bgClass = "bg-red-950 border-red-700 text-red-200";
+                icon = "alert-circle";
+            } else if (type === "warning") {
+                bgClass = "bg-amber-950 border-amber-700 text-amber-200";
+                icon = "alert-triangle";
+            }
+
+            toast.className = `pointer-events-auto flex items-center space-x-2 border px-4 py-3 rounded-xl shadow-xl text-xs font-semibold transform transition-all duration-300 translate-y-5 opacity-0 ${bgClass}`;
+            toast.innerHTML = `
+                <i data-lucide="${icon}" class="w-4 h-4"></i>
+                <span>${message}</span>
+            `;
+
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-5', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
