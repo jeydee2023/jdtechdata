@@ -208,7 +208,7 @@
                 </div>
                 <div class="text-right">
                     <span id="modal-bundle-price" class="text-xl font-extrabold text-white block">GHS 45</span>
-                    <span id="modal-bundle-savings" class="text-[10px] text-green-400 font-bold bg-green-950/60 px-2 py-0.5 rounded">Save GHS 5</span>
+                    <span id="modal-bundle-savings" class="text-[10px] text-green-400 font-bold bg-green-950/60 px-2 py-0.5 rounded">Save GHS 10</span>
                 </div>
             </div>
 
@@ -373,13 +373,13 @@
     </footer>
 
     <script>
-        // DEFAULT INITIAL BUNDLES DATA
+        // HARD-CODED DEFAULT BUNDLES (Your exact official & selling prices)
         const DEFAULT_BUNDLES = [
-            { id: 'b1', size: '5 GB', official: 30, price: 25, cost: 20 },
-            { id: 'b2', size: '8 GB', official: 40, price: 35, cost: 32 },
-            { id: 'b3', size: '10 GB', official: 50, price: 45, cost: 40 },
-            { id: 'b4', size: '16 GB', official: 70, price: 65, cost: 64 },
-            { id: 'b5', size: '20 GB', official: 90, price: 85, cost: 80 }
+            { id: 'b1', size: '5 GB', official: 32, price: 25, cost: 20 },
+            { id: 'b2', size: '8 GB', official: 45, price: 37, cost: 30 },
+            { id: 'b3', size: '10 GB', official: 55, price: 45, cost: 38 },
+            { id: 'b4', size: '16 GB', official: 85, price: 74, cost: 65 },
+            { id: 'b5', size: '20 GB', official: 95, price: 90, cost: 82 }
         ];
 
         // CONFIG & STATE
@@ -402,10 +402,10 @@
             document.getElementById('year').textContent = new Date().getFullYear();
         });
 
-        // LOAD BUNDLES FROM FIREBASE CLOUD DATABASE
+        // LOAD BUNDLES FROM FIREBASE CLOUD DATABASE (Forces override/defaults if cloud is outdated)
         async function loadBundles() {
             try {
-                const { collection, getDocs } = window.firebaseMethods;
+                const { collection, getDocs, setDoc, doc } = window.firebaseMethods;
                 const querySnapshot = await getDocs(collection(window.db, "bundles"));
                 
                 bundles = [];
@@ -413,18 +413,32 @@
                     bundles.push({ id: document.id, ...document.data() });
                 });
 
-                // If cloud database is empty, seed it with default bundles
+                // If cloud database is empty, seed it with your exact new default bundles
                 if (bundles.length === 0) {
                     bundles = [...DEFAULT_BUNDLES];
                     for (let b of bundles) {
                         await saveBundleToCloud(b);
+                    }
+                } else {
+                    // Automatically update/sync standard default items if they match IDs or ensure defaults are present
+                    // Let's ensure your specified defaults override any legacy cloud items for these IDs
+                    for (let defB of DEFAULT_BUNDLES) {
+                        const existingIdx = bundles.findIndex(b => b.id === defB.id || b.size === defB.size);
+                        if (existingIdx !== -1) {
+                            bundles[existingIdx].official = defB.official;
+                            bundles[existingIdx].price = defB.price;
+                            await saveBundleToCloud(bundles[existingIdx]);
+                        } else {
+                            bundles.push(defB);
+                            await saveBundleToCloud(defB);
+                        }
                     }
                 }
                 
                 renderBundles();
             } catch (err) {
                 console.error("Error loading from Firebase:", err);
-                showToast("Failed to load cloud data. Using defaults.", "error");
+                showToast("Failed to load cloud data. Using local defaults.", "error");
                 bundles = [...DEFAULT_BUNDLES];
                 renderBundles();
             }
@@ -440,10 +454,8 @@
                     price: bundle.price,
                     cost: bundle.cost
                 });
-                showToast("Synced across the internet!", "success");
             } catch (err) {
                 console.error("Error saving to Firebase:", err);
-                showToast("Failed to save change online", "error");
             }
         }
 
@@ -719,6 +731,7 @@
             
             // Push update to Firebase Cloud
             await saveBundleToCloud(bundles[index]);
+            showToast("Price updated successfully!", "success");
         }
 
         async function handleAddBundle(e) {
@@ -752,6 +765,7 @@
 
             // Save new bundle to Firebase Cloud
             await saveBundleToCloud(newBundle);
+            showToast("New bundle added successfully!", "success");
         }
 
         async function deleteBundle(index) {
